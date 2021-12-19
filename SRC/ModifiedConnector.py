@@ -19,9 +19,12 @@ class ModifiedConnector:
         self._cursor.execute(cmd)
         self._connector.commit()
 
-    def inset_data(self, cmd, data):
+    def execute_with_params(self, cmd, data):
         self._cursor.execute(cmd, data)
         self._connector.commit()
 
     def close(self):
         self._connector.close()
+
+    def fetch_data(self):
+        return self._cursor.fetchall()
