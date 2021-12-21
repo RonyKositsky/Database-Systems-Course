@@ -1,0 +1,4 @@
+.idea/*
+SRC/*.csv
+SRC/.idea/*
+SRC/__pycache__/

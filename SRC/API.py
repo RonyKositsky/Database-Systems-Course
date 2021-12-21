@@ -15,7 +15,7 @@ tmdb.debug = True
 discover = Discover()
 genre = Genre()
 movies = discover.discover_movies({})
-
+genres_dict = genre.movie_list()
 
 def import_to_tables(dict):
     cmds = [
@@ -44,14 +44,20 @@ def parse_movie(movie_obj):
         "title": movie_obj["title"],
         "language": movie_obj["original_language"],
         "vote_avg": movie_obj["vote_average"],
-        "votes": movie_obj["votes"]}
+        "votes": movie_obj["vote_count"]}
     genre_str = ""
-    for g in movie_obj["genres"]:
-        genre_str += genre[g]
+    genres_params = movie_obj["genre_ids"]
+    for genre_id in genres_params:
+        for element in genres_dict:
+            if genre_id == element["id"]:
+                genre_str += element["name"] + ","
+                break
+    genre_str = genre_str[:-1]
     params_dict["genre"] = genre_str
 
     import_to_tables(params_dict)
 
 
-for movie in movies:
-    parse_movie(movie)
+if __name__ == "__main__":
+    for movie in movies:
+        parse_movie(movie)

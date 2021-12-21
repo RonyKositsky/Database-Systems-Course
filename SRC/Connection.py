@@ -125,8 +125,6 @@ def insert_movies_votes_data():
 def insert_movies_budget_data():
     csv_reader = open_csv_reader("IMDb movies.csv")
     cmd = "INSERT INTO movies_budget (movie_id, budget) VALUES (%s, %s)"
-    i = 0
-    counter = 0
     for row in list(csv_reader)[1:]:
         try:
             movie_id = int(row[0][2:])
@@ -136,11 +134,6 @@ def insert_movies_budget_data():
                 budget = float(''.join((ch if ch in '0123456789' else '') for ch in budget_str))
             data = (movie_id, budget)
             connector.execute_with_params(cmd, data)
-            if i % 5000 == 0:
-                i = 0
-                print("dot " + str(counter))
-                counter += 1
-            i += 1
         except Exception as e:
             print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
     print("Finished")
@@ -149,11 +142,15 @@ def insert_movies_budget_data():
 def insert_actors_data():
     csv_reader = open_csv_reader("IMDb names.csv")
     cmd = "INSERT INTO actors (actor_id, name, bio) VALUES (%s, %s, %s)"
+    MAX_SIZE = 15000
+
     for row in list(csv_reader)[1:]:
         try:
             actor_id = int(row[0][2:])
             name = row[1]
             bio = row[4]
+            if len(bio) > MAX_SIZE:
+                bio = bio[:MAX_SIZE]
             data = (actor_id, name, bio)
             connector.execute_with_params(cmd, data)
         except Exception as e:
@@ -167,8 +164,12 @@ def insert_ratings_data():
     for row in list(csv_reader)[1:]:
         try:
             movie_id = int(row[0][2:])
-            male_avg = float(row[23])
-            female_avg = float(row[33])
+            male_avg = None
+            if row[23] != '':
+                male_avg = float(row[23])
+            female_avg = None
+            if row[33] != '':
+                female_avg = float(row[33])
             data = (movie_id, male_avg, female_avg)
             connector.execute_with_params(cmd, data)
         except Exception as e:
@@ -188,17 +189,13 @@ def insert_all_data():
 
 
 def modifications():
-    cmd = '''ALTER TABLE movies_votes MODIFY critics_votes FLOAT;'''
+    cmd = '''ALTER TABLE actors MODIFY bio VARCHAR(15000);'''
     connector.execute(cmd)
 
 
 if __name__ == "__main__":
-    # create_db_tables()
-    # insert_all_data()
-    # insert_movies_data()
+    create_db_tables()
+    insert_all_data()
+    insert_movies_data()
     # modifications()
-    # connector.close()
-    insert_movies_budget_data()
-    # insert_actors_data()
-    # insert_ratings_data()
     connector.close()
