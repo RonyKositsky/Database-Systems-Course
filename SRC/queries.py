@@ -1,4 +1,3 @@
-import csv
 from ModifiedConnector import ModifiedConnector
 
 cursor = ModifiedConnector()
@@ -20,9 +19,9 @@ def query_1(num_of_votes, avg_vote):
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (title, votes, avg_votes) in ret_data:
         print("title : {}, votes: {}, avg_votes: {}".format(title, votes, avg_votes))
+
 
 ################      Top movies with at least X reviews     ################
 def query_2(num_of_votes, avg_vote, num_of_reviews):
@@ -44,9 +43,9 @@ def query_2(num_of_votes, avg_vote, num_of_reviews):
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (title, reviews_from_users) in ret_data:
         print("title : {}, reviews_from_users: {}".format(title, reviews_from_users))
+
 
 ################      Counts number of movies of each genre (from top movies)     ################
 def query_3(avg_vote):
@@ -56,18 +55,18 @@ def query_3(avg_vote):
             from movies_votes m
             where m.avg_votes > (%s)) as topm
             where mg.movie_id = topm.movie_id
-            group by mg.genres'''%(avg_vote)
+            group by mg.genres''' % (avg_vote)
 
     try:
-        #cursor.execute_with_params(cmd, (avg_vote))
+        # cursor.execute_with_params(cmd, (avg_vote))
         cursor.execute_query(cmd)
     except Exception as e:
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (genre, count) in ret_data:
         print("genre : {}, count: {}".format(genre, count))
+
 
 ################      Actor and movie for the actors that are chosen by the user   ################
 def query_4(list_of_actors_inp):
@@ -107,9 +106,9 @@ def query_4(list_of_actors_inp):
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (name, title) in ret_data:
         print("actor name : {}, title: {}".format(name, title))
+
 
 ################      Number of movies from each country and the average vote of them     ################
 def query_5():
@@ -124,9 +123,9 @@ def query_5():
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (country, count, avg) in ret_data:
         print("country : {}, number of movies: {}, average vote: {}".format(country, count, avg))
+
 
 ################      Union of all the movies of 3 categories chosen by the user   ################
 def query_6(list_of_categories_inp):
@@ -153,9 +152,9 @@ def query_6(list_of_categories_inp):
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (title) in ret_data:
         print("title: {}".format(title))
+
 
 ################      Table with countries total movies budget and avg vote of them     ################
 def query_7():
@@ -173,9 +172,9 @@ def query_7():
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (country, total_budget, avg_country_votes) in ret_data:
         print("country : {}, total_budget: {}, average vote: {}".format(country, total_budget, avg_country_votes))
+
 
 ################      Top rated movies by men union 100 top rated movies by womens     ################
 def query_8():
@@ -201,7 +200,6 @@ def query_8():
         print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
 
     ret_data = cursor.fetch_data()
-    #print(ret_data)
     for (title, avg_vote) in ret_data:
         print("title : {}, avg_vote: {}".format(title, avg_vote))
 
