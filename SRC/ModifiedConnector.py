@@ -15,6 +15,12 @@ class ModifiedConnector:
         )
         self._cursor = self._connector.cursor()
 
+    def execute_query(self, cmd):
+        self._cursor.execute(cmd)
+
+    def execute_query_with_params(self, cmd, data):
+        self._cursor.execute(cmd, data)
+
     def execute(self, cmd):
         self._cursor.execute(cmd)
         self._connector.commit()
