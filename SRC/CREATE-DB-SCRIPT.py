@@ -36,8 +36,6 @@ def create_db_tables():
         create_table(cmd)
 
 
-
-
 if __name__ == "__main__":
     create_db_tables()
     connector.close()
